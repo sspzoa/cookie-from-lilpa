@@ -7,22 +7,6 @@
     <link rel="icon" href="./favicon.svg" type="image/x-icon">
     <title>Cookie from LILPA</title>
     <script>
-        function getCookie(name) {
-            var nameEQ = name + "=";
-            var ca = document.cookie.split(';');
-            for(var i=0;i < ca.length;i++) {
-                var c = ca[i];
-                while (c.charAt(0)==' ') c = c.substring(1,c.length);
-                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-            }
-            return null;
-        }
-
-        function checkAllMembersYes() {
-            var members = ["GOSEGU", "INE", "JINGBURGER", "JURURU", "VIICHAN"];
-            return members.every(member => getCookie(member) === "yes");
-        }
-
         function setCookie(name, value, days) {
             var expires = "";
             if (days) {
@@ -33,23 +17,22 @@
             document.cookie = name + "=" + (value || "")  + expires + "; path=/";
         }
 
-        function fetchFlag() {
-            fetch('/get-flag', {
-                method: 'POST'
-            })
-                .then(response => response.json())
-                .then(data => {
-                    alert("성공!\n" + data.message);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+        async function getFlag() {
+            const response = await fetch('/get-flag', {
+                method: 'POST',
+                credentials: 'include'
+            });
+
+            if (response.status === 400) {
+                return 0;
+            }
+
+            const data = await response.text();
+            alert(data);
         }
 
-        function setMembersCookie() {
-            if (checkAllMembersYes()) {
-                fetchFlag();
-            } else {
+        async function initState() {
+            if (await getFlag()) {
                 setCookie("GOSEGU", "yes", 7);
                 setCookie("INE", "yes", 7);
                 setCookie("JINGBURGER", "yes", 7);
@@ -57,11 +40,9 @@
                 setCookie("VIICHAN", "no", 7);
             }
         }
-
-
     </script>
 </head>
-<body onload="setMembersCookie()">
+<body onload=initState()>
 <div class="container">
     <h1>Cookie from LILPA</h1>
     <p>모든 멤버에게 쿠키를 전달하세요!</p>
