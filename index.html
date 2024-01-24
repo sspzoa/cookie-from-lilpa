@@ -33,9 +33,22 @@
             document.cookie = name + "=" + (value || "")  + expires + "; path=/";
         }
 
+        function fetchFlag() {
+            fetch('/get-flag', {
+                method: 'POST'
+            })
+                .then(response => response.json())
+                .then(data => {
+                    alert("성공!\n" + data.message);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
         function setMembersCookie() {
             if (checkAllMembersYes()) {
-                alert("성공!\n" + "DIMI{Every_G0t_Yummy_C00kie!}");
+                fetchFlag();
             } else {
                 setCookie("GOSEGU", "yes", 7);
                 setCookie("INE", "yes", 7);
@@ -44,6 +57,8 @@
                 setCookie("VIICHAN", "no", 7);
             }
         }
+
+
     </script>
 </head>
 <body onload="setMembersCookie()">
