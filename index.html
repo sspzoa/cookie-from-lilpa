@@ -23,26 +23,20 @@
                 credentials: 'include'
             });
 
-            if (response.status === 400) {
-                return 0;
-            }
-
-            const data = await response.text();
-            alert(data);
-        }
-
-        async function initState() {
-            if (await getFlag()) {
+            if (response.status !== 200) {
                 setCookie("GOSEGU", "yes", 7);
                 setCookie("INE", "yes", 7);
                 setCookie("JINGBURGER", "yes", 7);
                 setCookie("JURURU", "not yet", 7);
                 setCookie("VIICHAN", "no", 7);
             }
+
+            const data = await response.text();
+            alert(data);
         }
     </script>
 </head>
-<body onload=initState()>
+<body onload=getFlag()>
 <div class="container">
     <h1>Cookie from LILPA</h1>
     <p>모든 멤버에게 쿠키를 전달하세요!</p>
